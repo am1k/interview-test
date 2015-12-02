@@ -14,15 +14,12 @@
 		var results = [],
 			queue = [],
 			activeNumber = 0,
-			counter = 0,
 			done;
 
 		this.job = function(fn){
-			console.log(fn);
-			fn.id = counter;
 			queue.push(fn);
+			results.push(fn);
 			this.work();
-			counter++;
 			return this;
 		};
 
@@ -30,13 +27,9 @@
 			var fn;
 			if(queue.length && activeNumber < userOpt.parallelJobs){
 				activeNumber++;
-				console.log(queue, counter);
-				console.log();
 				fn = queue.shift();
 				fn(function (res) {
-					console.log(res);
-					results[fn.id] = res;
-					fn.id = null;
+					results[results.indexOf(fn)] = res;
 					activeNumber--;
 					this.work();
 				}.bind(this));
@@ -85,10 +78,6 @@
 	function step4(done) {
 //		console.log('step4');
 		setTimeout(done, 100, 'step4');
-	}
-	function step5(done) {
-//		console.log('step5');
-		setTimeout(done, 300, 'step5');
 	}
 
 	var isPassed = false;
